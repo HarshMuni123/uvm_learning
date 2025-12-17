@@ -1,0 +1,30 @@
+# KERNEL: ------------------------------------------------
+# KERNEL: Name          Type                   Size  Value
+# KERNEL: ------------------------------------------------
+# KERNEL: uvm_test_top  test                   -     @335 
+# KERNEL:   e           env                    -     @348 
+# KERNEL:     c         consumer               -     @366 
+# KERNEL:       imp     uvm_blocking_put_imp   -     @375 
+# KERNEL:     p         producer               -     @357 
+# KERNEL:       port    uvm_blocking_put_port  -     @385 
+# KERNEL: ------------------------------------------------
+# KERNEL: 
+# KERNEL: UVM_INFO /home/runner/testbench.sv(20) @ 0: uvm_test_top.e.p [PROD] PROD: DATA SENT = 12
+# KERNEL: UVM_INFO /home/runner/testbench.sv(43) @ 0: uvm_test_top.e.c [CON] DATA RCVD = 12
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_objection.svh(1271) @ 0: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 0: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    6
+# KERNEL: UVM_WARNING :    0
+# KERNEL: UVM_ERROR :    0
+# KERNEL: UVM_FATAL :    0
+# KERNEL: ** Report counts by id
+# KERNEL: [CON]     1
+# KERNEL: [PROD]     1
+# KERNEL: [RNTST]     1
+# KERNEL: [TEST_DONE]     1
+# KERNEL: [UVM/RELNOTES]     1
+# KERNEL: [UVMTOP]     1
+# KERNEL: 
