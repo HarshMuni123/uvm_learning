@@ -1,0 +1,137 @@
+
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+
+// TLM PART 4 Non --	Blocking tr_put 	&	 uvm_tlm_fifo
+
+typedef int arr_t[3];
+
+class producer extends uvm_component;
+  
+  `uvm_component_utils(producer)
+  arr_t arr;
+  
+  uvm_nonblocking_put_port #(arr_t) port;
+  
+  function new(string path = "prod",uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  virtual function void build_phase(uvm_phase phase);
+    port = new("port",this);
+  endfunction
+  
+  virtual task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    if(!port.try_put(arr)) begin
+      `uvm_info("prod","FIFO FULL -- DROPPED",UVM_NONE);
+    end
+    phase.drop_objection(this);
+  endtask
+  
+endclass
+
+
+// consumer
+
+
+class consumer extends uvm_component;
+  
+  `uvm_component_utils(consumer)
+  
+  uvm_blocking_get_port #(arr_t) get_port;
+  
+  function new(string path = "con",uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  virtual function void build_phase(uvm_phase phase);
+    get_port = new("get_port",this);
+  endfunction
+
+  virtual task run_phase(uvm_phase phase);
+    arr_t arr;
+    phase.raise_objection(this);
+    get_port.get(arr);
+    foreach(arr[i]) 
+      `uvm_info("con",$sformatf("CON: DATA arr[%0d] = %0d",i,arr[i]),UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+    
+  
+endclass
+
+    
+// env
+
+
+class env extends uvm_env;
+  `uvm_component_utils(env)
+  
+  uvm_tlm_fifo #(arr_t) fifo;
+  
+  producer p1,p2;
+  consumer c;
+  
+  function new(string path = "env",uvm_component parent);
+    super.new(path,parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    fifo = new("fifo",this,2);		// depth = 2
+    p1 = producer::type_id::create("p1",this);
+    p2 = producer::type_id::create("p2",this);
+    c = consumer::type_id::create("c",this);
+    
+    p1.arr = '{1,2,3};
+    p2.arr = '{5,6,7};
+  endfunction
+    
+  virtual function void connect_phase(uvm_phase phase);
+    p1.port.connect(fifo.put_export);
+    p2.port.connect(fifo.put_export);
+    c.get_port.connect(fifo.get_export);
+  endfunction
+  
+endclass
+
+
+
+    
+// env
+
+
+class test extends uvm_test;
+  `uvm_component_utils(test)
+  
+	env e;
+  
+  function new(string path = "test",uvm_component parent);
+    super.new(path,parent);
+  endfunction
+
+  virtual function void build_phase(uvm_phase phase);
+    e = env::type_id::create("e",this);
+  endfunction
+    
+  virtual function void end_of_elaboration_phase(uvm_phase phase);
+    uvm_top.print_topology();
+  endfunction
+  
+endclass
+
+
+// testbench
+
+module tb;
+  
+  initial begin
+    run_test("test");
+  end
+  
+endmodule
+    
+
+    
+    
