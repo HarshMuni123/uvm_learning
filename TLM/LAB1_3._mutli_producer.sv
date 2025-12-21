@@ -3,7 +3,7 @@
 import uvm_pkg::*;
 
 
-// TLM PART 2 PORT EXPORT IMP
+// TLM PART 3 -- Multi - Port
 
 typedef int arr_t[3];
 
